@@ -92,7 +92,7 @@ export default function ConsentFormsPage() {
         </div>
         <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-2" />New Consent Form</Button></DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle>{template.title}</DialogTitle></DialogHeader>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="space-y-1">
@@ -115,14 +115,15 @@ export default function ConsentFormsPage() {
               </div>
             </div>
 
-            <ScrollArea className="flex-1 pr-4 -mr-4 max-h-[50vh] border rounded-md p-4">
+            <div className="border rounded-md p-4 bg-muted/20">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground mb-3">Please read each section carefully before signing</p>
               <div className="space-y-5">
                 {template.sections.map((s, i) => (
-                  <div key={i} className="space-y-2">
+                  <div key={i} className="space-y-2 pb-4 border-b last:border-0">
                     <h3 className="font-semibold text-sm">{s.heading}{s.requireAgree && <span className="text-destructive ml-1">*</span>}</h3>
-                    {s.body && <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>}
+                    {s.body && <p className="text-sm text-foreground/80 leading-relaxed">{s.body}</p>}
                     {s.bullets && (
-                      <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                      <ul className="list-disc pl-5 text-sm text-foreground/80 space-y-1">
                         {s.bullets.map((b, j) => <li key={j}>{b}</li>)}
                       </ul>
                     )}
@@ -140,14 +141,14 @@ export default function ConsentFormsPage() {
                 ))}
                 {template.closing && <p className="text-sm font-medium pt-2">{template.closing}</p>}
               </div>
-            </ScrollArea>
+            </div>
 
             <div className="space-y-2">
               <Label>Patient Signature *</Label>
               <SignaturePad ref={sigRef} />
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 sticky bottom-0 bg-background pt-2">
               <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
               <Button onClick={handleSave} disabled={createForm.isPending}>
                 {createForm.isPending ? "Saving..." : "Sign & Save"}
